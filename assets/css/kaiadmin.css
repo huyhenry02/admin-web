@@ -2990,7 +2990,7 @@ label.error {
 .table > thead > tr > th, .table > tbody > tr > th, .table > tfoot > tr > th, .table > thead > tr > td, .table > tbody > tr > td, .table > tfoot > tr > td {
   vertical-align: middle; }
 .table > tbody > tr > td, .table > tbody > tr > th {
-  padding: 16px 24px !important; }
+  padding: 16px 24px; }
 .table > tfoot > tr > td, .table > tfoot > tr > th {
   padding: 12px 24px !important; }
 .table thead th {
