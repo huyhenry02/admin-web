@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+	<title>Admin web</title>
+	<meta
+			content="width=device-width, initial-scale=1.0, shrink-to-fit=no"
+			name="viewport"
+	/>
+	<link
+			rel="icon"
+			href="assets/img/kaiadmin/favicon.ico"
+			type="image/x-icon"
+	/>
+	
+	<!-- Fonts and icons -->
+	<script src="assets/js/plugin/webfont/webfont.min.js"></script>
+	<script>
+		WebFont.load({
+			google: {families: ["Public Sans:300,400,500,600,700"]},
+			custom: {
+				families: [
+					"Font Awesome 5 Solid",
+					"Font Awesome 5 Regular",
+					"Font Awesome 5 Brands",
+					"simple-line-icons",
+				],
+				urls: ["assets/css/fonts.min.css"],
+			},
+			active: function () {
+				sessionStorage.fonts = true;
+			},
+		});
+		
+		function toggleSubfolder(element) {
+			var subfolder = element.nextElementSibling;
+			if (subfolder.style.display === "block") {
+				subfolder.style.display = "none";
+				element.querySelector("i").classList.replace("fa-folder-open", "fa-folder");
+			} else {
+				subfolder.style.display = "block";
+				element.querySelector("i").classList.replace("fa-folder", "fa-folder-open");
+			}
+		}
+	
+	</script>
+	
+	<!-- CSS Files -->
+	<link rel="stylesheet" href="assets/css/bootstrap.min.css"/>
+	<link rel="stylesheet" href="assets/css/plugins.min.css"/>
+	<link rel="stylesheet" href="assets/css/kaiadmin.min.css"/>
+	
+	<!-- CSS Just for demo purpose, don't include it in your project -->
+	<link rel="stylesheet" href="assets/css/demo.css"/>
+
+</head>
+<style>
+	.card-body {
+		display: flex;
+		padding: 20px;
+		background-color: #f9f9f9;
+		border-radius: 8px;
+		box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+	}
+	
+	.list-categories {
+		width: 55%;
+		border-right: 1px solid #d3d3d3;
+		padding-right: 20px;
+	}
+	
+	.folder-list {
+		list-style-type: none;
+		padding-left: 0;
+	}
+	
+	.folder-list li {
+		padding: 10px 0;
+	}
+	
+	.folder {
+		font-size: 18px;
+		font-weight: 500;
+		cursor: pointer;
+		display: block;
+		padding: 6px 0;
+		color: #007bff;
+	}
+	
+	.folder i {
+		margin-right: 8px;
+	}
+	
+	.folder:hover {
+		color: #0056b3;
+		text-decoration: underline;
+	}
+	
+	.subfolder {
+		list-style-type: none;
+		margin-left: 20px;
+		padding-left: 10px;
+		border-left: 1px dashed #d3d3d3;
+		display: none;
+	}
+	
+	.list-document-of-category {
+		width: 45%;
+		padding-left: 20px;
+	}
+	
+	.form-control {
+		border: 1px solid #d3d3d3;
+		border-radius: 4px;
+		padding: 10px;
+		font-size: 14px;
+	}
+	
+	.list-group {
+		background-color: #fff;
+		border: 1px solid #d3d3d3;
+		border-radius: 4px;
+		margin-top: 10px;
+	}
+	
+	.list-group-item {
+		display: flex;
+		align-items: center;
+		padding: 10px;
+		border-bottom: 1px solid #ececec;
+		transition: background-color 0.3s;
+	}
+	
+	.list-group-item:last-child {
+		border-bottom: none;
+	}
+	
+	.list-group-item:hover {
+		background-color: #f1f1f1;
+		text-decoration: none;
+	}
+	
+	.form-check-input {
+		width: 18px;
+		height: 18px;
+		margin-right: 10px;
+	}
+	
+	.me-2 {
+		margin-right: 8px;
+	}
+	
+	.fas {
+		color: #007bff;
+	}
+	
+	.fas.fa-file-download {
+		font-size: 18px;
+	}
+	
+	.list-group-item span {
+		font-size: 16px;
+		font-weight: 500;
+	}
+	
+	.folder i {
+		color: #ffc107;
+	}
+	
+	.folder-list li i {
+		margin-right: 6px;
+	}
+	
+	.folder-open i {
+		color: #007bff;
+	}
+	
+	.file-link {
+		text-decoration: none;
+		color: #000;
+		width: 100%;
+	}
+	
+	.file-link:hover {
+		color: #007bff;
+		text-decoration: underline;
+	}
+	
+	
+	.file-link .fas {
+		margin-right: 8px;
+	}
+	.card-header {
+		padding: 10px;
+	}
+	
+	.action-buttons {
+		display: flex;
+		gap: 10px;
+	}
+	
+	.input-search-category {
+		margin-left: auto;
+	}
+	
+	.input-search-category input.form-control {
+		width: 350px;
+		padding: 8px 12px;
+		border-radius: 20px;
+		border: 1px solid #ced4da;
+	}
+	
+	
+	.card-header a {
+		padding: 6px 10px;
+	}
+
+
+</style>
+<body>
+<div class="wrapper">
+	<!-- Sidebar -->
+	<div class="sidebar" data-background-color="dark">
+		<div class="sidebar-logo">
+			<!-- Logo Header -->
+			<div class="logo-header" data-background-color="dark">
+				<a href="index.html" class="logo">
+					<img
+							src="assets/img/kaiadmin/logo_light.svg"
+							alt="navbar brand"
+							class="navbar-brand"
+							height="20"
+					/>
+				</a>
+				<div class="nav-toggle">
+					<button class="btn btn-toggle toggle-sidebar">
+						<i class="gg-menu-right"></i>
+					</button>
+					<button class="btn btn-toggle sidenav-toggler">
+						<i class="gg-menu-left"></i>
+					</button>
+				</div>
+				<button class="topbar-toggler more">
+					<i class="gg-more-vertical-alt"></i>
+				</button>
+			</div>
+			<!-- End Logo Header -->
+		</div>
+		<div class="sidebar-wrapper scrollbar scrollbar-inner">
+			<div class="sidebar-content">
+				<ul class="nav nav-secondary">
+					<li class="nav-item active">
+						<a
+								data-bs-toggle="collapse"
+								href="#dashboard"
+								class="collapsed"
+								aria-expanded="false"
+						>
+							<i class="fas fa-bars"></i>
+							<p>Quản lý tài liệu</p>
+							<span class="caret"></span>
+						</a>
+						<div class="collapse show" id="dashboard">
+							<ul class="nav nav-collapse show">
+								<li>
+									<a href="list_documents.html">
+										<span class="sub-item">Danh sách tài liệu</span>
+									</a>
+								</li>
+								<li>
+									<a href="#">
+										<span class="sub-item">Tài liêu của tôi</span>
+									</a>
+								</li>
+								<li>
+									<a href="#">
+										<span class="sub-item">Thư mục tài liệu</span>
+									</a>
+								</li>
+								<li>
+									<a href="#">
+										<span class="sub-item">Yêu cầu phê duyệt</span>
+									</a>
+								</li>
+							</ul>
+						</div>
+					</li>
+					<li class="nav-item">
+						<a data-bs-toggle="collapse show" href="#maps">
+							<i class="fas fa-user-cog"></i>
+							<p>Quản lý người dùng</p>
+							<span class="caret"></span>
+						</a>
+						<div class="collapse show" id="maps">
+							<ul class="nav nav-collapse">
+								<li>
+									<a href="">
+										<span class="sub-item">Danh sách người dùng</span>
+									</a>
+								</li>
+							</ul>
+						</div>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+	<!-- End Sidebar -->
+	
+	<div class="main-panel">
+		<div class="main-header">
+			<div class="main-header-logo">
+				<!-- Logo Header -->
+				<div class="logo-header" data-background-color="dark">
+					<a href="index.html" class="logo">
+						<img
+								src="assets/img/kaiadmin/logo_light.svg"
+								alt="navbar brand"
+								class="navbar-brand"
+								height="20"
+						/>
+					</a>
+					<div class="nav-toggle">
+						<button class="btn btn-toggle toggle-sidebar">
+							<i class="gg-menu-right"></i>
+						</button>
+						<button class="btn btn-toggle sidenav-toggler">
+							<i class="gg-menu-left"></i>
+						</button>
+					</div>
+					<button class="topbar-toggler more">
+						<i class="gg-more-vertical-alt"></i>
+					</button>
+				</div>
+				<!-- End Logo Header -->
+			</div>
+			<!-- Navbar Header -->
+			<nav
+					class="navbar navbar-header navbar-header-transparent navbar-expand-lg border-bottom"
+			>
+				<div class="container-fluid">
+					<nav
+							class="navbar navbar-header-left navbar-expand-lg navbar-form nav-search p-0 d-none d-lg-flex"
+					>
+						<h3 class="fw-bold mb-3">Danh sách</h3>
+						<ul class="breadcrumbs mb-3">
+							<li class="nav-home">
+								<a href="#">
+									<i class="icon-home"></i>
+								</a>
+							</li>
+							<li class="separator">
+								<i class="icon-arrow-right"></i>
+							</li>
+							<li class="nav-item">
+								<a href="#">Quản lý thư mục</a>
+							</li>
+							<li class="separator">
+								<i class="icon-arrow-right"></i>
+							</li>
+							<li class="nav-item">
+								<a href="#">Danh sách thư mục</a>
+							</li>
+						</ul>
+					</nav>
+					
+					<ul class="navbar-nav topbar-nav ms-md-auto align-items-center">
+						<li class="nav-item topbar-user dropdown hidden-caret">
+							<a
+									class="dropdown-toggle profile-pic"
+									data-bs-toggle="dropdown"
+									href="#"
+									aria-expanded="false"
+							>
+								<div class="avatar-sm">
+									<img
+											src="assets/img/profile.jpg"
+											alt="..."
+											class="avatar-img rounded-circle"
+									/>
+								</div>
+								<span class="profile-username">
+                      <span class="op-7">Hi,</span>
+                      <span class="fw-bold">Admin</span>
+                    </span>
+							</a>
+							<ul class="dropdown-menu dropdown-user animated fadeIn">
+								<div class="dropdown-user-scroll scrollbar-outer">
+									<li>
+										<div class="user-box">
+											<div class="avatar-lg">
+												<img
+														src="assets/img/profile.jpg"
+														alt="image profile"
+														class="avatar-img rounded"
+												/>
+											</div>
+											<div class="u-text">
+												<h4>Admin</h4>
+												<p class="text-muted">hello@example.com</p>
+												<a
+														href="#"
+														class="btn btn-xs btn-secondary btn-sm"
+												>View Profile</a
+												>
+											</div>
+										</div>
+									</li>
+									<li>
+										<div class="dropdown-divider"></div>
+										<a class="dropdown-item" href="#">Account Setting</a>
+										<div class="dropdown-divider"></div>
+										<a class="dropdown-item" href="#">Logout</a>
+									</li>
+								</div>
+							</ul>
+						</li>
+					</ul>
+				</div>
+			</nav>
+			<!-- End Navbar -->
+		</div>
+		
+		<div class="container">
+			<div class="page-inner">
+				<div class="row">
+					<div class="col-md-12">
+						<div class="card">
+							<div class="card-header d-flex justify-content-between align-items-center">
+								<div class="action-buttons">
+									<a href="#" class="btn btn-outline-primary me-2"><i class="fa fa-plus"></i> Thêm thư mục</a>
+									<a href="#" class="btn btn-outline-secondary me-2"><i class="fas fa-pen"></i> Sửa thư mục</a>
+									<a href="#" class="btn btn-outline-danger me-2"><i class="fas fa-trash-alt"></i> Xóa thư mục</a>
+									<a href="#" class="btn btn-outline-info me-2"><i class="fas fa-th-large"></i> Di chuyển bài viết</a>
+									<a href="#" class="btn btn-outline-success me-2"><i class="fas fa-times"></i> Bỏ bài viết khỏi thư mục</a>
+								</div>
+								<div class="input-search-category">
+									<label>
+										<input type="text" placeholder="Tìm kiếm theo tiêu đề hoặc thư mục tài liệu  ..." class="form-control" />
+									</label>
+								</div>
+							</div>
+							
+							<div class="card-body d-flex">
+								<div class="list-categories">
+									<ul class="folder-list">
+										<li>
+                <span class="folder" onclick="toggleSubfolder(this)">
+                    <i class="fas fa-folder me-2"></i>Folder 1
+                </span>
+											<ul class="subfolder">
+												<li>
+                        <span class="folder" onclick="toggleSubfolder(this)">
+                            <i class="fas fa-folder me-2"></i>Subfolder 1.1
+                        </span>
+													<ul class="subfolder">
+														<li><i class="fas fa-folder me-2"></i>Subfolder 1.1.1</li>
+														<li><i class="fas fa-folder me-2"></i>Subfolder 1.1.2</li>
+													</ul>
+												</li>
+												<li><i class="fas fa-folder me-2"></i>Subfolder 1.2</li>
+											</ul>
+										</li>
+										<li>
+                                            <span class="folder" onclick="toggleSubfolder(this)">
+                                                            <i class="fas fa-folder me-2"></i>Folder 2
+                                                </span>
+											<ul class="subfolder">
+												<li><i class="fas fa-folder me-2"></i>Subfolder 2.1</li>
+												<li><i class="fas fa-folder me-2"></i>Subfolder 2.2</li>
+											</ul>
+										</li>
+									</ul>
+								</div>
+								<div class="list-document-of-category">
+									<div class="mb-3">
+										<input type="text" class="form-control" placeholder="Tìm kiếm theo tiêu đề tài liệu ...">
+									</div>
+									
+									<div class="list-group">
+										<div class="list-group-item">
+											<input type="checkbox" class="form-check-input me-2">
+											<label>Tất cả thư mục đang chọn</label>
+										</div>
+										<div class="list-group-item d-flex align-items-center">
+											<input type="checkbox" class="form-check-input me-2">
+											<a href="assets/example-file/K56SD3_20D191141_Vũ Thị Hải Yến__KLTN.pdf"
+											   download class="file-link d-flex align-items-center">
+												<i class="fas fa-file-download me-2"></i>
+												<span>File 1</span>
+											</a>
+										</div>
+										<div class="list-group-item d-flex align-items-center">
+											<input type="checkbox" class="form-check-input me-2">
+											<a href="assets/example-file/K56SD3_20D191141_Vũ Thị Hải Yến__KLTN.pdf"
+											   download class="file-link d-flex align-items-center">
+												<i class="fas fa-file-download me-2"></i>
+												<span>File 2</span>
+											</a>
+										</div>
+										<div class="list-group-item d-flex align-items-center">
+											<input type="checkbox" class="form-check-input me-2">
+											<a href="assets/example-file/K56SD3_20D191141_Vũ Thị Hải Yến__KLTN.pdf"
+											   download class="file-link d-flex align-items-center">
+												<i class="fas fa-file-download me-2"></i>
+												<span>File 3</span>
+											</a>
+										</div>
+									
+									</div>
+								</div>
+							</div>
+						</div>
+						
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+</div>
+<!--   Core JS Files   -->
+<script src="assets/js/core/jquery-3.7.1.min.js"></script>
+<script src="assets/js/core/popper.min.js"></script>
+<script src="assets/js/core/bootstrap.min.js"></script>
+
+<!-- jQuery Scrollbar -->
+<script src="assets/js/plugin/jquery-scrollbar/jquery.scrollbar.min.js"></script>
+
+<!-- Chart JS -->
+<script src="assets/js/plugin/chart.js/chart.min.js"></script>
+
+<!-- jQuery Sparkline -->
+<script src="assets/js/plugin/jquery.sparkline/jquery.sparkline.min.js"></script>
+
+<!-- Chart Circle -->
+<script src="assets/js/plugin/chart-circle/circles.min.js"></script>
+
+<!-- Datatables -->
+<script src="assets/js/plugin/datatables/datatables.min.js"></script>
+
+<!-- Bootstrap Notify -->
+<script src="assets/js/plugin/bootstrap-notify/bootstrap-notify.min.js"></script>
+
+<!-- jQuery Vector Maps -->
+<script src="assets/js/plugin/jsvectormap/jsvectormap.min.js"></script>
+<script src="assets/js/plugin/jsvectormap/world.js"></script>
+
+<!-- Sweet Alert -->
+<script src="assets/js/plugin/sweetalert/sweetalert.min.js"></script>
+
+<!-- Kaiadmin JS -->
+<script src="assets/js/kaiadmin.min.js"></script>
+
+<!-- Kaiadmin DEMO methods, don't include it in your project! -->
+<script src="assets/js/setting-demo.js"></script>
+<script src="assets/js/demo.js"></script>
+<script>
+	$("#lineChart").sparkline([102, 109, 120, 99, 110, 105, 115], {
+		type: "line",
+		height: "70",
+		width: "100%",
+		lineWidth: "2",
+		lineColor: "#177dff",
+		fillColor: "rgba(23, 125, 255, 0.14)",
+	});
+	
+	$("#lineChart2").sparkline([99, 125, 122, 105, 110, 124, 115], {
+		type: "line",
+		height: "70",
+		width: "100%",
+		lineWidth: "2",
+		lineColor: "#f3545d",
+		fillColor: "rgba(243, 84, 93, .14)",
+	});
+	
+	$("#lineChart3").sparkline([105, 103, 123, 100, 95, 105, 115], {
+		type: "line",
+		height: "70",
+		width: "100%",
+		lineWidth: "2",
+		lineColor: "#ffa534",
+		fillColor: "rgba(255, 165, 52, .14)",
+	});
+</script>
+</body>
+</html>
